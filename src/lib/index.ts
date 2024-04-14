@@ -1,0 +1,1 @@
+export { speechToText} from './speechToText'
