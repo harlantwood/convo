@@ -1,6 +1,11 @@
-import { playAudio } from './textToSpeech/browser/playAudio'
+import { playAudio as browserPlayAudio } from './textToSpeech/browser/playAudio'
+import { response as serverOpenAiResponse } from './textToSpeech/server/openai'
 
-export { speechToText} from './speechToText'
+
 export const tts = {
-  browser: {playAudio},
+  browser: {playAudio: browserPlayAudio},
+  server: {openai: {response: serverOpenAiResponse}}
 }
+
+// TODO fold into above API
+export { speechToText} from './speechToText'
