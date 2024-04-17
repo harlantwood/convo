@@ -1,4 +1,4 @@
-export function speechToText(transcriptChunks: string[], options: Record<string, any>) {
+export function transcribe(transcriptChunks: string[], options: Record<string, any>) {
 	console.log({ transcriptChunks, options })
 	navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
 		if (!MediaRecorder.isTypeSupported('audio/webm')) {
