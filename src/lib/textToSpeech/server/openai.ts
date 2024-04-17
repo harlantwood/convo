@@ -1,12 +1,15 @@
 import OpenAI from 'openai'
 import { Buffer } from 'buffer/'
 
-export async function response(input, { model, voice, apiKey }) {
+export async function response(
+	input: string,
+	{ model, voice, apiKey }: { model: string; voice: string; apiKey: string }
+) {
 	const openai = new OpenAI({ apiKey })
 
 	const mp3 = await openai.audio.speech.create({
-		model: 'tts-1',
-		voice: 'alloy',
+		model,
+		voice,
 		input,
 	})
 
