@@ -4,7 +4,11 @@ import { transcribe as browserDeepgramTranscribe } from './speechToText/browser/
 
 export const tts = {
 	browser: { playAudio: browserPlayAudio },
-	server: { openai: { response: serverOpenAiResponse } },
+	server: {
+		openai: {
+			response: serverOpenAiResponse,
+		},
+	},
 }
 
 export const stt = {
