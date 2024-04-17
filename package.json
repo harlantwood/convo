@@ -14,7 +14,10 @@
 		"tts",
 		"webllm"
 	],
-	"repository": "github:harlantwood/ai-convo",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/harlantwood/ai-convo.git"
+	},
 	"license": "Apache-2.0",
 	"author": "Harlan T Wood",
 	"type": "module",
