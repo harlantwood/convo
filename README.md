@@ -1,6 +1,6 @@
 # AI Convo
 
-High level wrappers for conversation tools: text to speech, speech to text, LLMs...
+High level wrappers for AI conversation tools: text to speech, speech to text, LLMs...
 
 ## Status
 

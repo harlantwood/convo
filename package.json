@@ -1,7 +1,22 @@
 {
 	"name": "ai-convo",
 	"version": "0.0.1",
+	"description": "High level wrappers for AI conversation tools: text to speech, speech to text, LLMs",
+	"keywords": [
+		"ai",
+		"deepgram",
+		"llm",
+		"openai",
+		"speech-to-text",
+		"speech",
+		"stt",
+		"text-to-speech",
+		"tts",
+		"webllm"
+	],
+	"repository": "github:harlantwood/ai-convo",
 	"license": "Apache-2.0",
+	"author": "Harlan T Wood",
 	"type": "module",
 	"exports": {
 		".": {
