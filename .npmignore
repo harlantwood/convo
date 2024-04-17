@@ -1,0 +1,6 @@
+.svelte-kit
+svelte.*
+vite.*
+src/routes
+src/app*
+static
