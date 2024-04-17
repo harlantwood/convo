@@ -30,4 +30,10 @@ export default [
 	{
 		ignores: ['build/', '.svelte-kit/', 'package/'],
 	},
+
+	{
+		rules: {
+			eqeqeq: ['error', 'always', { null: 'ignore' }],
+		},
+	},
 ]
