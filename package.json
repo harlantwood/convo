@@ -36,7 +36,7 @@
 	],
 	"scripts": {
 		"build": "vite build && npm run package",
-		"bump": "npm-bump patch --prefix '[skip ci]' --access public",
+		"bump": "npm-bump patch --remote origin --branch main --prefix '[skip ci]' --access public",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"dev": "vite dev",
