@@ -9,6 +9,7 @@ type CommonTranscriptionOptions = {
 	) => void
 	onEnd: () => void
 	onError: (error: Error) => void
+	onWarn: (message: string) => void
 }
 
 type TranscribeOptions = CommonTranscriptionOptions & {
@@ -17,38 +18,42 @@ type TranscribeOptions = CommonTranscriptionOptions & {
 
 type OpenTranscriptionOptions = CommonTranscriptionOptions
 
-export function transcribe({ apiKey, onConnect, onChunk, onEnd, onError }: TranscribeOptions) {
-	navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-		if (!MediaRecorder.isTypeSupported('audio/webm')) {
-			throw new Error('Browser MediaRecorder does not support audio/webm format')
-		}
-		const mediaRecorder = new MediaRecorder(stream, {
-			mimeType: 'audio/webm',
-		})
+export async function transcribe({ apiKey, onConnect, onChunk, onEnd, onWarn, onError }: TranscribeOptions) {
+	const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
 
-		const deepgramClient = createClient(apiKey)
-
-		const liveClient: LiveClient = deepgramClient.listen.live({
-			model: 'nova-2',
-			language: 'en-US',
-			smart_format: true,
-		})
-
-		liveClient.on(LiveTranscriptionEvents.Open, () =>
-			openTranscription(liveClient, mediaRecorder, {
-				onConnect,
-				onChunk,
-				onEnd,
-				onError,
-			})
-		)
+	if (!MediaRecorder.isTypeSupported('audio/webm')) {
+		throw new Error('Browser MediaRecorder does not support audio/webm format')
+	}
+	const mediaRecorder = new MediaRecorder(stream, {
+		mimeType: 'audio/webm',
 	})
+
+	const deepgramClient = createClient(apiKey)
+
+	const liveClient: LiveClient = deepgramClient.listen.live({
+		model: 'nova-2',
+		language: 'en-US',
+		smart_format: true,
+	})
+
+	liveClient.on(LiveTranscriptionEvents.Open, () => {
+		console.log('LiveTranscriptionEvents.Open')
+		openTranscription(liveClient, mediaRecorder, {
+			onConnect,
+			onChunk,
+			onEnd,
+			onWarn,
+			onError,
+		})
+	})
+
+	return liveClient
 }
 
 function openTranscription(
 	liveClient: LiveClient,
 	mediaRecorder: MediaRecorder,
-	{ onConnect, onChunk, onEnd, onError }: OpenTranscriptionOptions
+	{ onConnect, onChunk, onEnd, onWarn, onError }: OpenTranscriptionOptions
 ) {
 	onConnect()
 
@@ -64,6 +69,8 @@ function openTranscription(
 	})
 
 	liveClient.on(LiveTranscriptionEvents.Transcript, (data: LiveTranscriptionEvent) => {
+		console.log('LiveTranscriptionEvents.Transcript')
+		console.log('socket ready state: ', liveClient.getReadyState())
 		const alternative = data.channel.alternatives[0]
 		const { transcript, confidence } = alternative
 		if (transcript != null && transcript.length > 0 && data.speech_final) {
@@ -74,6 +81,10 @@ function openTranscription(
 
 	liveClient.on(LiveTranscriptionEvents.Metadata, (data: LiveMetadataEvent) => {
 		console.log('[metadata]', data)
+	})
+
+	liveClient.on(LiveTranscriptionEvents.Warning, (message: string) => {
+		onWarn(message)
 	})
 
 	liveClient.on(LiveTranscriptionEvents.Error, (errorEvent: unknown) => {
