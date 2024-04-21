@@ -2,6 +2,4 @@
 set -euo pipefail
 set -x
 
-npm-bump ${1:-patch} \
-  --prefix "[skip ci]" \
-  --access public \
+npm-bump ${1:-patch} --prefix "[skip ci]"
