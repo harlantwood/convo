@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+set -x
+
+npm-bump ${1:-patch} \
+  --prefix "[skip ci]" \
+  --access public \
