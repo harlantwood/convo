@@ -1,6 +1,6 @@
 {
 	"name": "ai-convo",
-	"version": "0.0.6-pre",
+	"version": "0.0.6",
 	"description": "High level wrappers for AI conversation tools: text to speech, speech to text, LLMs",
 	"keywords": [
 		"ai",
