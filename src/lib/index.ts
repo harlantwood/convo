@@ -4,6 +4,7 @@ import {
 	transcribe as browserDeepgramTranscribe,
 	stop as browserDeepgramStop,
 } from './speechToText/browser/deepgram'
+import { zodSchema } from './llm/structured'
 
 export const tts = {
 	browser: { playAudio: browserPlayAudio },
@@ -20,5 +21,11 @@ export const stt = {
 			transcribe: browserDeepgramTranscribe,
 			stop: browserDeepgramStop,
 		},
+	},
+}
+
+export const llm = {
+	structure: {
+		zodSchema
 	},
 }
