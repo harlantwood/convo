@@ -1,10 +1,10 @@
+import { zodSchema, objectToHtml } from './llm/structured'
 import { playAudio as browserPlayAudio } from './textToSpeech/browser/playAudio'
 import { response as serverOpenAiResponse } from './textToSpeech/server/openai'
 import {
 	transcribe as browserDeepgramTranscribe,
 	stop as browserDeepgramStop,
 } from './speechToText/browser/deepgram'
-import { zodSchema } from './llm/structured'
 
 export const tts = {
 	browser: { playAudio: browserPlayAudio },
@@ -27,5 +27,6 @@ export const stt = {
 export const llm = {
 	structure: {
 		zodSchema,
+		objectToHtml,
 	},
 }

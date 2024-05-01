@@ -43,7 +43,17 @@ export function zodSchema(fields: Field[]): ZodObject<ZodRawShape> {
 		.optional()
 		.describe('Any additional information or comments you would like to add')
 
-	return z.object(schemaObject)
+	const structured = // TODO is this name passed to openai? make meanifufl if so
+		z.object({
+			// ts-expect-error Type instantiation is excessively deep
+			items: z.array(
+				// TODO only array if type==Listable
+				z.object(schemaObject)
+			),
+			// .describe('some description'), // TODO
+		})
+
+	return structured
 }
 
 function checkUniquePropertyNames(properties: Field[]) {
@@ -51,4 +61,27 @@ function checkUniquePropertyNames(properties: Field[]) {
 	if (properties.length !== uniqueNames.size) {
 		throw new Error('Property names must be unique')
 	}
+}
+
+export function objectToHtml(obj: unknown): string {
+	if (Array.isArray(obj)) {
+		return arrayToHtml(obj)
+	} else if (typeof obj === 'object' && obj !== null) {
+		// @ts-expect-error TS doesn't map type===`object` to Record<string, unknown>
+		return hashToHtml(obj)
+	} else {
+		return String(obj)
+	}
+}
+
+function arrayToHtml(arr: unknown[]): string {
+	const listItems = arr.map((item) => `<li>${objectToHtml(item)}</li>`).join('')
+	return `<ol>${listItems}</ol>`
+}
+
+function hashToHtml(hash: { [key: string]: unknown }): string {
+	const listItems = Object.entries(hash)
+		.map(([key, value]) => `<li><strong>${key}:</strong> ${objectToHtml(value)}</li>`)
+		.join('')
+	return `<ul class="hash">${listItems}</ul>`
 }
