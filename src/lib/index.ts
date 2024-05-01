@@ -26,6 +26,6 @@ export const stt = {
 
 export const llm = {
 	structure: {
-		zodSchema
+		zodSchema,
 	},
 }
