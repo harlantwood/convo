@@ -37,8 +37,8 @@
 	"scripts": {
 		"build": "vite build && npm run package",
 		"bump": "bin/bump",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"check:svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "yarn check:svelte --watch",
 		"dev": "vite dev",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
@@ -47,7 +47,7 @@
 		"package:watch": "svelte-kit sync && svelte-package --watch",
 		"prepublishOnly": "npm run package",
 		"preview": "vite preview",
-		"ps": "yarn lint:fix && git push origin HEAD",
+		"ps": "yarn lint:fix && yarn check:svelte && git push origin HEAD",
 		"sort": "yarn sort-package-json",
 		"test": "vitest"
 	},
