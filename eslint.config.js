@@ -34,6 +34,7 @@ export default [
 	{
 		rules: {
 			eqeqeq: ['error', 'always', { null: 'ignore' }],
+			'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
 		},
 	},
 ]

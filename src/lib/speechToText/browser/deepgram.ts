@@ -82,8 +82,8 @@ function openTranscription({
 		}
 	})
 
-	liveClient!.on(LiveTranscriptionEvents.Metadata, (data: LiveMetadataEvent) => {
-		console.log('[metadata]', data)
+	liveClient!.on(LiveTranscriptionEvents.Metadata, (_data: LiveMetadataEvent) => {
+		// console.log('[metadata]', data)
 	})
 
 	liveClient!.on(LiveTranscriptionEvents.Warning, (message: string) => {
