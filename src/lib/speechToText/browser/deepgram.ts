@@ -1,4 +1,4 @@
-import { createClient, LiveTranscriptionEvents } from '@deepgram/sdk'
+import { createClient, LiveConnectionState, LiveTranscriptionEvents } from '@deepgram/sdk'
 import type { LiveClient, LiveMetadataEvent, LiveTranscriptionEvent } from '@deepgram/sdk'
 
 type CommonTranscriptionOptions = {
@@ -98,11 +98,13 @@ function openTranscription({
 export function stop() {
 	mediaRecorder?.stop()
 	mediaRecorder?.removeEventListener('dataavailable', sendAudioToDeepgram)
-	liveClient?.finish()
+	if (liveClient?.getReadyState() === LiveConnectionState.OPEN) {
+		liveClient?.finish()
+	}
 }
 
 function sendAudioToDeepgram(event: BlobEvent) {
-	if (event.data.size > 0) {
+	if (liveClient?.getReadyState() === LiveConnectionState.OPEN && event.data.size > 0) {
 		liveClient!.send(event.data)
 	}
 }
