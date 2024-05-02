@@ -36,7 +36,6 @@
 	],
 	"scripts": {
 		"build": "vite build && npm run package",
-		"bump": "bin/bump",
 		"check:svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "yarn check:svelte --watch",
 		"dev": "vite dev",
