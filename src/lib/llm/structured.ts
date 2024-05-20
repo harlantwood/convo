@@ -43,7 +43,7 @@ export function zodSchema(fields: Field[]): ZodObject<ZodRawShape> {
 		.optional()
 		.describe('Any additional information or comments you would like to add')
 
-	const structured = // TODO is this name passed to openai? make meanifufl if so
+	const structured = // TODO is this name passed to openai? make it meaningful if so
 		z.object({
 			// ts-expect-error Type instantiation is excessively deep
 			items: z.array(

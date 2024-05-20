@@ -1,9 +1,11 @@
 import OpenAI from 'openai'
 import { Buffer } from 'buffer/'
 
+type OpenAiVoice = 'alloy' | 'echo' | 'fable' | 'nova' | 'onyx' | 'shimmer'
+
 export async function response(
 	input: string,
-	{ model, voice, apiKey }: { model: string; voice: string; apiKey: string }
+	{ model, voice, apiKey }: { model: string; voice: OpenAiVoice; apiKey: string }
 ) {
 	const openai = new OpenAI({ apiKey })
 
