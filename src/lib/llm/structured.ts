@@ -59,11 +59,21 @@ export function zodSchema(fields: Field[]): ZodObject<ZodRawShape> {
 function checkUniquePropertyNames(properties: Field[]) {
 	const uniqueNames = new Set(properties.map((field) => field.name))
 	if (properties.length !== uniqueNames.size) {
-		throw new Error('Property names must be unique')
+		throw new Error(
+			`Property names must be unique, but found duplicates: ${properties.map((field) => field.name).sort()}`
+		)
 	}
 }
 
-export function objectToHtml(obj: unknown): string {
+export function toHtml(obj: unknown): string {
+	if (typeof obj === 'object' && obj !== null && Object.keys(obj).length === 1 && 'items' in obj) {
+		return objectToHtml(obj.items)
+	} else {
+		return objectToHtml(obj)
+	}
+}
+
+function objectToHtml(obj: unknown): string {
 	if (Array.isArray(obj)) {
 		return arrayToHtml(obj)
 	} else if (typeof obj === 'object' && obj !== null) {
@@ -75,13 +85,13 @@ export function objectToHtml(obj: unknown): string {
 }
 
 function arrayToHtml(arr: unknown[]): string {
-	const listItems = arr.map((item) => `<li>${objectToHtml(item)}</li>`).join('')
-	return `<ol>${listItems}</ol>`
+	const listItems = arr.map((item) => `<li>${objectToHtml(item)}</li>`).join('\n')
+	return `<ol class="array">\n${listItems}\n</ol>`
 }
 
 function hashToHtml(hash: { [key: string]: unknown }): string {
 	const listItems = Object.entries(hash)
 		.map(([key, value]) => `<li><strong>${key}:</strong> ${objectToHtml(value)}</li>`)
-		.join('')
-	return `<ul class="hash">${listItems}</ul>`
+		.join('\n')
+	return `<ul class="hash">\n${listItems}\n</ul>`
 }
