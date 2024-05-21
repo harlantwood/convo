@@ -90,7 +90,7 @@ function openTranscription({
 		onWarn(message)
 	})
 
-	liveClient!.on(LiveTranscriptionEvents.Error, (errorEvent: unknown) => {
+	liveClient!.on(LiveTranscriptionEvents.Error, (errorEvent: Error) => {
 		onError(errorEvent)
 	})
 }

@@ -27,7 +27,9 @@ export function zodSchema(fields: Field[]): ZodObject<ZodRawShape> {
 				if (field.choices == null || field.choices.length === 0) {
 					throw new Error(`Enum field must have choices: ${field.name}`)
 				}
-				zodField = z.enum(field.choices).describe(field.description)
+				zodField = z
+					.enum([field.choices[0], ...field.choices.slice(1)] as [string, ...string[]])
+					.describe(field.description)
 				break
 			default:
 				throw new Error(`Unsupported type: ${field.type}`)
