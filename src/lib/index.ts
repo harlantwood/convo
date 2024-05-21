@@ -1,11 +1,11 @@
-import { zodSchema, toHtml } from './llm/structured'
-import { playAudio as browserPlayAudio } from './textToSpeech/browser/audio'
-import { stopAllAudio as browserStopAllAudio } from './textToSpeech/browser/audio'
-import { response as serverOpenAiResponse } from './textToSpeech/server/openai'
+import { zodSchema, toHtml } from './llm/structured.js'
+import { playAudio as browserPlayAudio } from './textToSpeech/browser/audio.js'
+import { stopAllAudio as browserStopAllAudio } from './textToSpeech/browser/audio.js'
+import { response as serverOpenAiResponse } from './textToSpeech/server/openai.js'
 import {
 	transcribe as browserDeepgramTranscribe,
 	stop as browserDeepgramStop,
-} from './speechToText/browser/deepgram'
+} from './speechToText/browser/deepgram.js'
 
 export const tts = {
 	browser: {
