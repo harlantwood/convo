@@ -6,18 +6,11 @@ on:
       - main
 
 jobs:
-  lint:
+  checks:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - run: yarn
-      - run: yarn lint
-
-  package: # does not publish, just checks that `yarn package` works
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: yarn
-      - run: yarn package
+      - run: yarn checks
+      - run: yarn committed # ensure that checks did not modify files (eg formatting, linting, etc.)
