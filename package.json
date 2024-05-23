@@ -38,7 +38,8 @@
 		"build": "vite build && npm run package",
 		"check:svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "yarn check:svelte --watch",
-		"checks": "yarn lint:fix && yarn check:svelte && tsc --noEmit && yarn package",
+		"checks": "yarn sort && yarn lint:fix && yarn check:svelte && tsc --noEmit && yarn package",
+		"committed": "git diff --exit-code",
 		"dev": "vite dev",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
@@ -47,7 +48,7 @@
 		"package:watch": "svelte-kit sync && svelte-package --watch",
 		"prepublishOnly": "npm run package",
 		"preview": "vite preview",
-		"ps": "yarn checks && git push origin HEAD",
+		"ps": "yarn checks && yarn committed && git push origin HEAD",
 		"sort": "yarn sort-package-json",
 		"test": "vitest"
 	},
