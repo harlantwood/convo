@@ -9,6 +9,10 @@ type Field = {
 	required: boolean
 }
 
+type ToHtmlOptions = {
+	priorityKeys?: string[]
+}
+
 export function zodSchema(fields: Field[]): ZodObject<ZodRawShape> {
 	const schemaObject: Record<string, ZodTypeAny> = {}
 
@@ -67,33 +71,49 @@ function checkUniquePropertyNames(properties: Field[]) {
 	}
 }
 
-export function toHtml(obj: unknown): string {
+export function toHtml(obj: unknown, options?: ToHtmlOptions): string {
+	console.log('in toHtml, options:', options)
 	if (typeof obj === 'object' && obj !== null && Object.keys(obj).length === 1 && 'items' in obj) {
-		return objectToHtml(obj.items)
+		return objectToHtml(obj.items, options)
 	} else {
-		return objectToHtml(obj)
+		return objectToHtml(obj, options)
 	}
 }
 
-function objectToHtml(obj: unknown): string {
+function objectToHtml(obj: unknown, options?: ToHtmlOptions): string {
 	if (Array.isArray(obj)) {
-		return arrayToHtml(obj)
+		return arrayToHtml(obj, options)
 	} else if (typeof obj === 'object' && obj !== null) {
 		// @ts-expect-error TS doesn't map type===`object` to Record<string, unknown>
-		return hashToHtml(obj)
+		return hashToHtml(obj, options)
 	} else {
 		return String(obj)
 	}
 }
 
-function arrayToHtml(arr: unknown[]): string {
-	const listItems = arr.map((item) => `<li>${objectToHtml(item)}</li>`).join('\n')
+function arrayToHtml(arr: unknown[], options?: ToHtmlOptions): string {
+	const listItems = arr.map((item) => `<li>${objectToHtml(item, options)}</li>`).join('\n')
 	return `<ol class="array">\n${listItems}\n</ol>`
 }
 
-function hashToHtml(hash: { [key: string]: unknown }): string {
+function hashToHtml(hash: { [key: string]: unknown }, options?: ToHtmlOptions): string {
+	const priorityKeys = options?.priorityKeys ?? []
 	const listItems = Object.entries(hash)
-		.map(([key, value]) => `<li><strong>${key}:</strong> ${objectToHtml(value)}</li>`)
+		.sort(([key1], [key2]) => {
+			console.log({ key1, key2, priorityKeys })
+			const priority1 = priorityKeys.indexOf(key1)
+			const priority2 = priorityKeys.indexOf(key2)
+			if (priority1 !== -1 && priority2 !== -1) {
+				return priority1 - priority2
+			} else if (priority1 !== -1) {
+				return -1
+			} else if (priority2 !== -1) {
+				return 1
+			} else {
+				return key1.localeCompare(key2)
+			}
+		})
+		.map(([key, value]) => `<li><strong>${key}:</strong> ${objectToHtml(value, options)}</li>`)
 		.join('\n')
 	return `<ul class="hash">\n${listItems}\n</ul>`
 }
