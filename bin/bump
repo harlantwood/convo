@@ -2,4 +2,8 @@
 set -euo pipefail
 set -x
 
+# NOTES:
+# Do not run via yarn, it will not work, run directly via shell
+# Enter npm MFA code when prompted
+
 npx --yes npm-bump ${1:-patch} --prefix "[skip ci]"
