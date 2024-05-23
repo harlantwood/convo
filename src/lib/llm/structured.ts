@@ -10,6 +10,7 @@ type Field = {
 }
 
 type ToHtmlOptions = {
+	ignoreSingleKeyNames: string[]
 	priorityKeys?: string[]
 }
 
@@ -71,13 +72,19 @@ function checkUniquePropertyNames(properties: Field[]) {
 	}
 }
 
-export function toHtml(obj: unknown, options?: ToHtmlOptions): string {
-	console.log('in toHtml, options:', options)
-	if (typeof obj === 'object' && obj !== null && Object.keys(obj).length === 1 && 'items' in obj) {
-		return objectToHtml(obj.items, options)
-	} else {
-		return objectToHtml(obj, options)
+export function toHtml(thing: unknown, options?: ToHtmlOptions): string {
+	if (thing == null) {
+		throw new Error('toHtml: argument is null or undefined')
 	}
+	if (typeof thing === 'object' && Object.keys(thing).length === 1) {
+		const theKey: string = Object.keys(thing)[0]
+		const theValue = Object.values(thing)[0]
+		console.log({ theKey, ignoreSingleKeyNames: options?.ignoreSingleKeyNames })
+		if (options?.ignoreSingleKeyNames?.includes(theKey)) {
+			return objectToHtml(theValue, options)
+		}
+	}
+	return objectToHtml(thing, options)
 }
 
 function objectToHtml(obj: unknown, options?: ToHtmlOptions): string {
@@ -100,7 +107,6 @@ function hashToHtml(hash: { [key: string]: unknown }, options?: ToHtmlOptions): 
 	const priorityKeys = options?.priorityKeys ?? []
 	const listItems = Object.entries(hash)
 		.sort(([key1], [key2]) => {
-			console.log({ key1, key2, priorityKeys })
 			const priority1 = priorityKeys.indexOf(key1)
 			const priority2 = priorityKeys.indexOf(key2)
 			if (priority1 !== -1 && priority2 !== -1) {
