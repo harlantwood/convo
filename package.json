@@ -36,9 +36,8 @@
 	],
 	"scripts": {
 		"build": "vite build && npm run package",
-		"check:svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "yarn check:svelte --watch",
-		"checks": "yarn sort && yarn lint:fix && yarn check:svelte && tsc --noEmit && yarn package",
+		"checks": "(prettier --check --log-level warn . || prettier --write --log-level warn .) && eslint --fix . && yarn scheck && tsc --noEmit && yarn package && yarn sort",
+		"checks:watch": "reset && nodemon --watch . --watch .env --watch .env.local --ext ts,svelte,json,js --ignore .svelte-kit --ignore dist --exec 'yarn checks'",
 		"committed": "git diff --exit-code",
 		"dev": "vite dev",
 		"format": "prettier --write .",
@@ -49,6 +48,7 @@
 		"prepublishOnly": "npm run package",
 		"preview": "vite preview",
 		"ps": "yarn checks && yarn committed && git push origin HEAD",
+		"scheck": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --threshold warning --fail-on-warnings",
 		"sort": "yarn sort-package-json",
 		"test": "vitest"
 	},
@@ -68,6 +68,7 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
 		"globals": "^15.0.0",
+		"nodemon": "^3.1.1",
 		"prettier": "^3.1.1",
 		"prettier-plugin-svelte": "^3.1.2",
 		"publint": "^0.1.9",
