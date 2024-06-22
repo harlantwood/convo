@@ -76,39 +76,47 @@ export function toHtml(thing: unknown, options?: ToHtmlOptions): string {
 	if (thing == null) {
 		throw new Error('toHtml: argument is null or undefined')
 	}
+
 	if (typeof thing === 'object' && Object.keys(thing).length === 1) {
 		const theKey: string = Object.keys(thing)[0]
 		const theValue = Object.values(thing)[0]
 		console.log({ theKey, ignoreSingleKeyNames: options?.ignoreSingleKeyNames })
 		if (options?.ignoreSingleKeyNames?.includes(theKey)) {
-			return objectToHtml(theValue, options)
+			return toHtml(theValue, options)
 		}
 	}
-	return objectToHtml(thing, options)
-}
 
-function objectToHtml(obj: unknown, options?: ToHtmlOptions): string {
-	if (Array.isArray(obj)) {
-		return arrayToHtml(obj, options)
-	} else if (typeof obj === 'object' && obj !== null) {
+	if (Array.isArray(thing)) {
+		return arrayToHtml(thing, options)
+	} else if (typeof thing === 'object' && thing !== null) {
 		// @ts-expect-error TS doesn't map type===`object` to Record<string, unknown>
-		return hashToHtml(obj, options)
+		return hashToHtml(thing, options)
 	} else {
-		return String(obj)
+		return String(thing)
 	}
 }
 
 function arrayToHtml(arr: unknown[], options?: ToHtmlOptions): string {
-	const listItems = arr.map((item) => `<li>${objectToHtml(item, options)}</li>`).join('\n')
-	return `<ol class="array">\n${listItems}\n</ol>`
+	let listItems = arr.map((item) => `<li>${toHtml(item, options)}</li>`).join('\n')
+	if (listItems.trim() === '') {
+		listItems = '<li>(Unknown)</li>'
+	}
+return `<ol class="array">\n${listItems}\n</ol>`
 }
 
 function hashToHtml(hash: { [key: string]: unknown }, options?: ToHtmlOptions): string {
 	const priorityKeys = options?.priorityKeys ?? []
-	const listItems = Object.entries(hash)
+	let listItems = Object.entries(hash)
 		.sort(([key1], [key2]) => {
 			const priority1 = priorityKeys.indexOf(key1)
 			const priority2 = priorityKeys.indexOf(key2)
+			// comments always go last:
+			if (key1.trim().toLowerCase() === 'comments') {
+				return 1
+			}
+			if (key2.trim().toLowerCase() === 'comments') {
+				return -1
+			}
 			if (priority1 !== -1 && priority2 !== -1) {
 				return priority1 - priority2
 			} else if (priority1 !== -1) {
@@ -119,7 +127,10 @@ function hashToHtml(hash: { [key: string]: unknown }, options?: ToHtmlOptions): 
 				return key1.localeCompare(key2)
 			}
 		})
-		.map(([key, value]) => `<li><strong>${key}:</strong> ${objectToHtml(value, options)}</li>`)
+		.map(([key, value]) => `<li><strong>${key}:</strong> ${toHtml(value, options)}</li>`)
 		.join('\n')
+		if (listItems.trim() === '') {
+			listItems = '<li>(Unknown)</li>'
+		}
 	return `<ul class="hash">\n${listItems}\n</ul>`
 }
