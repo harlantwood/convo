@@ -80,7 +80,6 @@ export function toHtml(thing: unknown, options?: ToHtmlOptions): string {
 	if (typeof thing === 'object' && Object.keys(thing).length === 1) {
 		const theKey: string = Object.keys(thing)[0]
 		const theValue = Object.values(thing)[0]
-		console.log({ theKey, ignoreSingleKeyNames: options?.ignoreSingleKeyNames })
 		if (options?.ignoreSingleKeyNames?.includes(theKey)) {
 			return toHtml(theValue, options)
 		}
