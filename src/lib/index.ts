@@ -1,4 +1,4 @@
-import { zodSchema, toHtml } from './llm/structured.js'
+import { toHtml, zodSchema } from './llm/structured.js'
 import { playAudio as browserPlayAudio } from './textToSpeech/browser/audio.js'
 import { stopAllAudio as browserStopAllAudio } from './textToSpeech/browser/audio.js'
 import { response as serverOpenAiResponse } from './textToSpeech/server/openai.js'
@@ -30,7 +30,7 @@ export const stt = {
 
 export const llm = {
 	structure: {
-		zodSchema,
 		toHtml,
+		zodSchema,
 	},
 }
