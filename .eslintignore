@@ -1,0 +1,11 @@
+.DS_Store
+/.svelte-kit
+/archive/
+/build
+/dist
+/package
+/tmp
+node_modules
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

@@ -101,7 +101,7 @@ function arrayToHtml(arr: unknown[], options?: ToHtmlOptions): string {
 	if (listItems.trim() === '') {
 		listItems = '<li>(Unknown)</li>'
 	}
-return `<ol class="array">\n${listItems}\n</ol>`
+	return `<ol class="array">\n${listItems}\n</ol>`
 }
 
 function hashToHtml(hash: { [key: string]: unknown }, options?: ToHtmlOptions): string {
@@ -129,8 +129,8 @@ function hashToHtml(hash: { [key: string]: unknown }, options?: ToHtmlOptions): 
 		})
 		.map(([key, value]) => `<li><strong>${key}:</strong> ${toHtml(value, options)}</li>`)
 		.join('\n')
-		if (listItems.trim() === '') {
-			listItems = '<li>(Unknown)</li>'
-		}
+	if (listItems.trim() === '') {
+		listItems = '<li>(Unknown)</li>'
+	}
 	return `<ul class="hash">\n${listItems}\n</ul>`
 }
