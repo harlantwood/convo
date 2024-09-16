@@ -29,22 +29,26 @@ export async function transcribe({
 	onWarn,
 	onError,
 }: TranscribeOptions) {
-	const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+	if (mediaRecorder == null) {
+		const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
 
-	if (!MediaRecorder.isTypeSupported('audio/webm')) {
-		throw new Error('Browser MediaRecorder does not support audio/webm format')
+		if (!MediaRecorder.isTypeSupported('audio/webm')) {
+			throw new Error('Browser MediaRecorder does not support audio/webm format')
+		}
+		mediaRecorder = new MediaRecorder(stream, {
+			mimeType: 'audio/webm',
+		})
 	}
-	mediaRecorder = new MediaRecorder(stream, {
-		mimeType: 'audio/webm',
-	})
 
-	const deepgramClient = createClient(apiKey)
+	if (liveClient == null) {
+		const deepgramClient = createClient(apiKey)
 
-	liveClient = deepgramClient.listen.live({
-		model: 'nova-2',
-		language: 'en-US',
-		smart_format: true,
-	})
+		liveClient = deepgramClient.listen.live({
+			model: 'nova-2',
+			language: 'en-US',
+			smart_format: true,
+		})
+	}
 
 	liveClient.on(LiveTranscriptionEvents.Open, () => {
 		openTranscription({
